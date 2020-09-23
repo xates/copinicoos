@@ -9,8 +9,10 @@
 # Copinicoos
 Copinicoos is a <a href="https://scihub.copernicus.eu/dhus/#/home">Copernicus</a> satellite image download manager. 
 
+Download your cart from here `https://scihub.copernicus.eu/dhus/api/stub/users/0/carts/0?offset=0&count=150` and save it to `cart.json`.
+
 Copinicoos can ...
-1. Automate the download of all results in a search query. 
+1. Automate the download of all products in a cart json. 
 2. Download in parallel processes, for faster downloads. 
 3. Manage polling for offline products. 
 4. Stop and resume downloads, anytime!
@@ -34,7 +36,7 @@ Copinicoos can ...
 ## Install
 
 ```
-pip install copinicoos
+py setup.py install --user
 ```
 
 ## Usage
@@ -54,7 +56,7 @@ And then follow on-screen prompt:
    
 3. Authenticate accounts by entering login credentials.
    
-4. Enter query. This can be obtained from Copernicus Open Hub `Request Done: ( ... )`. Just copy that whole string.
+4. ~Enter query. This can be obtained from Copernicus Open Hub `Request Done: ( ... )`. Just copy that whole string.~
 
 5. Enter Polling Interval. Entering nothing will use default of one poll every 30 mins.
 
@@ -120,12 +122,7 @@ Start a fresh download.
 Input can be read from a text file by affixing `@` to file name eg.
 
 ```
-py -m copinicoos fresh @query.txt @secrets.json
-```
-
-eg. Inside `query.txt`
-```
-( footprint:"Intersects(POLYGON((91.45532862800384 22.42016942838278,91.34620270146559 22.43895934481047,91.32598614177974 22.336847270362682,91.4350291249018 22.31804599405974,91.45532862800384 22.42016942838278)))" ) AND ( (platformname:Sentinel-1 AND producttype:GRD))
+py -m copinicoos fresh dummy @secrets.json
 ```
 
 eg. Inside `secrets.json`

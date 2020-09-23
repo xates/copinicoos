@@ -75,15 +75,12 @@ class Worker(Resumable, Loggable):
         Returns: 
             total_results (int): the total number of product results from the query response
         '''
-        json_file = "res.json"
+        json_file = "cart.json"
         try:
-            cmd = ["wget", "--no-check-certificate", "--user=" + self.username, "--password=" + self.password, "-O", json_file, query]
-            subprocess.call(cmd)
             res_json = json.load(open(json_file))
-            total_results = int(res_json["feed"]["opensearch:totalResults"])
+            total_results = int(res_json["totalresults"])
             if total_results <= 0:
                 raise ValueError
-            os.remove(json_file)
             return total_results
         except Exception as e:
             raise
@@ -93,16 +90,11 @@ class Worker(Resumable, Loggable):
         params: result number
         returns: title and product_uri, eg. "S1A_IW_GRDH_1SDV_20181011T115601_20181011T115626_024088_02A208_C886", "https://scihub.copernicus.eu/dhus/odata/v1/Products('7bc7da0c-8241-4bbe-8d59-1661667c6161')/$value"
         '''
-        query = self.query + str(result_num) 
-        self.logger.debug(query)
-        json_file = self.name + "_res.json"
+        json_file = "cart.json"
         try:
-            cmd = ["wget", "--no-check-certificate", "--user=" + self.username, "--password=" + self.password, "-O", json_file, query]
-            subprocess.call(cmd)
             res_json = json.load(open(json_file))
-            title = str(res_json["feed"]["entry"]["title"])
-            product_uri = str(res_json["feed"]["entry"]["link"][0]["href"])
-            os.remove(json_file)
+            title = str(res_json["products"][result_num]["identifier"])
+            product_uri = "https://scihub.copernicus.eu/dhus/odata/v1/Products('" + str(res_json["products"][result_num]["uuid"]) + "')/$value"
             return title, product_uri
         except Exception as e:
             raise
